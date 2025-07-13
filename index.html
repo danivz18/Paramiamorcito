@@ -11,6 +11,12 @@
       font-size: 18px;
       text-align: center;
     }
+    img {
+      width: 300px;
+      border-radius: 20px;
+      margin-top: 20px;
+    }
+
   </style>
 </head>
 <body>
@@ -19,5 +25,16 @@
   <p>Enserio que eres lo mejor que me ha pasado en la vida y no tengo forma de agradecerte todo lo que haces por mi.</p>
   <p>Eres la persona con la que quiero compartir mi vida entera, lo unico que quiero es estar siempre a tu lado y seguir compartiendo muchos momentos felices contigo.</p>
   <img src="https://media.stickerswiki.app/peachandgoma_by_shinoarobot/1948757.512.webp" alt="Peach and Goma">
+<!-- 🎉 Confeti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    window.onload = function () {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    };
+  </script>
 </body>
 </html>

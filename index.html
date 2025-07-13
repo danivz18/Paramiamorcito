@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Mi primera página en GitHub</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
   <style>
     body {
       background-color: #ffe4e1;
       font-family: 'Poppins', sans-serif;
       font-size: 18px;
       text-align: center;
+      overflow: hidden; /* evitar scroll por animacion */
+      margin: 0;
+      height: 100vh;
+      position: relative;
     }
     img {
       width: 300px;
       border-radius: 20px;
       margin-top: 20px;
     }
-
+    #flowerCanvas {
+      position: fixed;
+      pointer-events: none;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
@@ -24,8 +35,11 @@
   <p>Hice esta pagina especialmente para ti, para que recordaras lo muchooooooo que te amo mi niña preciosa❤️❤️❤️.</p>
   <p>Enserio que eres lo mejor que me ha pasado en la vida y no tengo forma de agradecerte todo lo que haces por mi.</p>
   <p>Eres la persona con la que quiero compartir mi vida entera, lo unico que quiero es estar siempre a tu lado y seguir compartiendo muchos momentos felices contigo.</p>
-  <img src="https://media.stickerswiki.app/peachandgoma_by_shinoarobot/1948757.512.webp" alt="Peach and Goma">
-<!-- 🎉 Confeti -->
+  <img src="https://media.stickerswiki.app/peachandgoma_by_shinoarobot/1948757.512.webp" alt="Peach and Goma" />
+
+  <canvas id="flowerCanvas"></canvas>
+
+  <!-- Confeti tradicional -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
     window.onload = function () {
@@ -35,6 +49,79 @@
         origin: { y: 0.6 }
       });
     };
+  </script>
+
+  <!-- Flores de loto cayendo -->
+  <script>
+    const canvas = document.getElementById('flowerCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let flowers = [];
+    const flowerCount = 40;
+
+    const flowerImg = new Image();
+    flowerImg.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/White_lotus_flower_in_Hamilton_Gardens.jpg/240px-White_lotus_flower_in_Hamilton_Gardens.jpg';
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Flower {
+      constructor() {
+        this.x = random(0, width);
+        this.y = random(-height, 0);
+        this.speed = random(1, 3);
+        this.size = random(20, 50);
+        this.angle = random(0, 2 * Math.PI);
+        this.angleSpeed = random(0.01, 0.03);
+      }
+      update() {
+        this.y += this.speed;
+        this.angle += this.angleSpeed;
+        if (this.y > height) {
+          this.y = -this.size;
+          this.x = random(0, width);
+          this.speed = random(1, 3);
+          this.size = random(20, 50);
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.drawImage(flowerImg, -this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
+      }
+    }
+
+    function setup() {
+      resize();
+      flowers = [];
+      for (let i = 0; i < flowerCount; i++) {
+        flowers.push(new Flower());
+      }
+      animate();
+    }
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      for (let flower of flowers) {
+        flower.update();
+        flower.draw();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', resize);
+
+    flowerImg.onload = setup;
   </script>
 </body>
 </html>
